@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<title>nv7q</title>
+<style>
+  :root {
+    --bg: #07090d;
+    --panel: rgba(255,255,255,0.05);
+    --line: rgba(255,255,255,0.09);
+    --text: #f2f4f7;
+    --muted: #8b93a1;
+    --gold: #d6b25e;
+    --up: #2fbf71;
+    --down: #e5484d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); overflow: hidden;
+    font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Roboto, Arial, sans-serif; }
+  body { font-size: 1.15vw; }
+
+  /* Toronto / Wall Street skyline backdrop, drawn inline */
+  .sky { position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 70% 0%, #1a2233 0%, #0b0f17 55%, #07090d 100%); }
+  .sky svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 42%; opacity: .55; }
+  /* Rotating Toronto / Wall Street photos, darkened so the data stays readable */
+  .photo { position: fixed; inset: 0; z-index: 0; background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 2.5s ease; transform: scale(1.04); }
+  .photo.on { opacity: 1; animation: drift 40s linear forwards; }
+  .shade { position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(180deg, rgba(5,7,11,.72) 0%, rgba(5,7,11,.55) 35%, rgba(5,7,11,.82) 100%); }
+  @keyframes drift { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+  .credit { position: fixed; right: 1.2vw; bottom: .5vw; z-index: 1; font-size: .6vw; color: rgba(255,255,255,.35); }
+
+  .wrap { position: relative; z-index: 1; height: 100%; display: grid;
+    grid-template-rows: auto auto 1fr; gap: 1.2vw; padding: 2vw 2.6vw 1.6vw; }
+
+  header { display: flex; align-items: flex-end; justify-content: space-between; }
+  .clocks { display: flex; gap: 4vw; }
+  .clock .city { font-size: .95vw; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); }
+  .clock .time { font-size: 5.2vw; font-weight: 200; line-height: 1; font-variant-numeric: tabular-nums; }
+  .clock .meta { font-size: .95vw; color: var(--muted); margin-top: .3vw; }
+  .clock .meta b { font-weight: 500; }
+  .open { color: var(--up); } .closed { color: var(--down); }
+  .date { text-align: right; }
+  .date .day { font-size: 2vw; font-weight: 300; }
+  .date .sub { color: var(--muted); font-size: 1vw; margin-top: .2vw; }
+
+  .tape { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); height: 3.2vw; overflow: hidden; }
+
+  .grid { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 1.2vw; min-height: 0; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 1vw;
+    backdrop-filter: blur(14px); padding: 1.2vw 1.4vw; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .card h2 { font-size: .85vw; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: .8vw; }
+  .stack { display: grid; grid-template-rows: auto auto 1fr; gap: 1.2vw; min-height: 0; }
+  .big { font-size: 2.6vw; font-weight: 300; line-height: 1.1; }
+  .lbl { color: var(--muted); font-size: .95vw; margin-top: .3vw; }
+  .count { display: flex; gap: 1.2vw; margin-top: .6vw; }
+  .count div { text-align: center; }
+  .count b { display: block; font-size: 2.4vw; font-weight: 300; font-variant-numeric: tabular-nums; }
+  .count span { font-size: .75vw; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; padding: .45vw 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .wx { font-size: 2vw; font-weight: 300; }
+  .tv { flex: 1; min-height: 0; }
+  .tv > div { height: 100% !important; }
+</style>
+</head>
+<body>
+<div class="sky">
+  <svg viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice" fill="#1c2535">
+    <!-- simplified Toronto skyline with CN Tower, and a Wall Street block on the right -->
+    <rect x="0" y="300" width="1600" height="100"/>
+    <rect x="60" y="210" width="70" height="190"/><rect x="140" y="170" width="55" height="230"/>
+    <rect x="205" y="240" width="80" height="160"/><rect x="295" y="150" width="60" height="250"/>
+    <rect x="365" y="120" width="75" height="280"/><rect x="450" y="190" width="50" height="210"/>
+    <polygon points="560,400 556,120 548,112 548,100 572,100 572,112 564,120 566,400"/>
+    <rect x="552" y="92" width="16" height="8" rx="3"/><rect x="558" y="10" width="4" height="82"/>
+    <ellipse cx="560" cy="106" rx="20" ry="9"/>
+    <rect x="610" y="160" width="70" height="240"/><rect x="690" y="100" width="65" height="300"/>
+    <rect x="765" y="200" width="90" height="200"/><rect x="865" y="140" width="60" height="260"/>
+    <rect x="1000" y="180" width="80" height="220"/><rect x="1090" y="80" width="70" height="320"/>
+    <polygon points="1125,80 1110,60 1140,60"/>
+    <rect x="1170" y="140" width="90" height="260"/><rect x="1270" y="200" width="60" height="200"/>
+    <rect x="1340" y="110" width="80" height="290"/><rect x="1430" y="230" width="70" height="170"/>
+    <rect x="1510" y="170" width="90" height="230"/>
+  </svg>
+</div>
+
+<div class="photo" id="ph-a"></div><div class="photo" id="ph-b"></div><div class="shade"></div>
+<div class="credit" id="credit"></div>
+
+<div class="wrap">
+  <header>
+    <div class="clocks">
+      <div class="clock">
+        <div class="city">New York · Wall Street</div>
+        <div class="time" id="t-ny">--:--</div>
+        <div class="meta">NYSE <b id="nyse">—</b></div>
+      </div>
+      <div class="clock">
+        <div class="city">Makkah</div>
+        <div class="time" id="t-mk">--:--</div>
+        <div class="meta">Tadawul <b id="tasi">—</b></div>
+      </div>
+      <div class="clock">
+        <div class="city">Toronto · Bay Street</div>
+        <div class="time" id="t-to">--:--</div>
+        <div class="meta">TSX <b id="tsx">—</b></div>
+      </div>
+    </div>
+    <div class="date">
+      <div class="day" id="today">—</div>
+      <div class="sub" id="weather">Loading weather…</div>
+    </div>
+  </header>
+
+  <div class="tape" id="tape"></div>
+
+  <div class="grid">
+    <div class="card"><h2>Markets</h2><div class="tv" id="overview"></div></div>
+
+    <div class="stack">
+      <div class="card">
+        <h2>Next Fed Decision</h2>
+        <div class="big" id="fed-date">—</div>
+        <div class="lbl">FOMC rate decision · 2:00 PM New York</div>
+        <div class="count" id="fed-count"></div>
+      </div>
+      <div class="card">
+        <h2>Next Formula 1</h2>
+        <div class="big" id="f1-name">Loading…</div>
+        <div class="lbl" id="f1-where"></div>
+        <div class="count" id="f1-count"></div>
+      </div>
+      <div class="card">
+        <h2>Weather</h2>
+        <div id="wx-list"></div>
+      </div>
+    </div>
+
+    <div class="card"><h2>Market News</h2><div class="tv" id="news"></div></div>
+  </div>
+</div>
+
+<script>
+  // FOMC 2026 decision days (second day of each meeting), 2:00 PM New York time.
+  var FOMC = ["2026-01-28","2026-03-18","2026-04-29","2026-06-17","2026-07-29","2026-09-16","2026-10-28","2026-12-09"];
+
+  function fmt(tz, opts) { return new Intl.DateTimeFormat("en-US", Object.assign({ timeZone: tz }, opts)).format(new Date()); }
+  function parts(tz) {
+    var p = {}; new Intl.DateTimeFormat("en-US", { timeZone: tz, hour12: false, weekday: "short", hour: "2-digit", minute: "2-digit" })
+      .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    return { day: p.weekday, mins: (+p.hour % 24) * 60 + (+p.minute) };
+  }
+  function session(tz, days, open, close) {
+    var p = parts(tz), on = days.indexOf(p.day) > -1 && p.mins >= open && p.mins < close;
+    return on ? '<span class="open">Open</span>' : '<span class="closed">Closed</span>';
+  }
+  // Offset (ms) between a time zone and UTC at a given instant.
+  function tzOffset(tz, d) {
+    var s = d.toLocaleString("en-US", { timeZone: tz }); return new Date(s) - new Date(d.toLocaleString("en-US", { timeZone: "UTC" }));
+  }
+  function nyTime(dateStr, hh) {
+    var guess = new Date(dateStr + "T" + hh + ":00:00Z");
+    return new Date(guess.getTime() - tzOffset("America/New_York", guess));
+  }
+  function countdown(el, target) {
+    var ms = Math.max(0, target - new Date()), d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+    el.innerHTML = "<div><b>" + d + "</b><span>days</span></div><div><b>" + h + "</b><span>hours</span></div><div><b>" + m + "</b><span>min</span></div>";
+  }
+
+  var fedTarget = null, f1Target = null;
+  function nextFed() {
+    for (var i = 0; i < FOMC.length; i++) {
+      var t = nyTime(FOMC[i], "14");
+      if (t > new Date()) return t;
+    }
+    return null;
+  }
+
+  function tick() {
+    var o = { hour: "2-digit", minute: "2-digit", hour12: false };
+    document.getElementById("t-ny").textContent = fmt("America/New_York", o);
+    document.getElementById("t-mk").textContent = fmt("Asia/Riyadh", o);
+    document.getElementById("t-to").textContent = fmt("America/Toronto", o);
+    document.getElementById("today").textContent = fmt("Asia/Riyadh", { weekday: "long", month: "long", day: "numeric" });
+    var wk = ["Mon","Tue","Wed","Thu","Fri"];
+    document.getElementById("nyse").innerHTML = session("America/New_York", wk, 570, 960);
+    document.getElementById("tsx").innerHTML = session("America/Toronto", wk, 570, 960);
+    document.getElementById("tasi").innerHTML = session("Asia/Riyadh", ["Sun","Mon","Tue","Wed","Thu"], 600, 900);
+    if (fedTarget) countdown(document.getElementById("fed-count"), fedTarget);
+    if (f1Target) countdown(document.getElementById("f1-count"), f1Target);
+  }
+
+  fedTarget = nextFed();
+  document.getElementById("fed-date").textContent = fedTarget
+    ? fedTarget.toLocaleDateString("en-US", { timeZone: "America/New_York", weekday: "short", month: "long", day: "numeric" })
+    : "2027 schedule TBA";
+
+  function loadF1() {
+    fetch("https://api.jolpi.ca/ergast/f1/current/next.json").then(function (r) { return r.json(); }).then(function (j) {
+      var race = j.MRData.RaceTable.Races[0];
+      if (!race) { document.getElementById("f1-name").textContent = "Season finished"; return; }
+      f1Target = new Date(race.date + "T" + (race.time || "12:00:00Z"));
+      document.getElementById("f1-name").textContent = race.raceName.replace(" Grand Prix", " GP");
+      document.getElementById("f1-where").textContent = race.Circuit.Location.locality + ", " + race.Circuit.Location.country + " · " +
+        f1Target.toLocaleString("en-US", { timeZone: "Asia/Riyadh", weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) + " Makkah";
+      tick();
+    }).catch(function () { document.getElementById("f1-name").textContent = "Unavailable"; });
+  }
+
+  var CITIES = [["Makkah", 21.4225, 39.8262], ["New York", 40.7128, -74.006], ["Toronto", 43.6532, -79.3832]];
+  var WX = { 0: "Clear", 1: "Mostly clear", 2: "Partly cloudy", 3: "Cloudy", 45: "Fog", 48: "Fog", 51: "Drizzle", 53: "Drizzle", 55: "Drizzle",
+    61: "Rain", 63: "Rain", 65: "Heavy rain", 71: "Snow", 73: "Snow", 75: "Heavy snow", 80: "Showers", 81: "Showers", 82: "Storms", 95: "Thunderstorm" };
+  function loadWeather() {
+    var url = "https://api.open-meteo.com/v1/forecast?current=temperature_2m,weather_code&latitude=" +
+      CITIES.map(function (c) { return c[1]; }).join(",") + "&longitude=" + CITIES.map(function (c) { return c[2]; }).join(",");
+    fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      var list = Array.isArray(j) ? j : [j];
+      document.getElementById("wx-list").innerHTML = list.map(function (w, i) {
+        return '<div class="row"><span>' + CITIES[i][0] + ' <span class="lbl">' + (WX[w.current.weather_code] || "") +
+          '</span></span><span class="wx">' + Math.round(w.current.temperature_2m) + '°</span></div>';
+      }).join("");
+      var mk = list[0].current;
+      document.getElementById("weather").textContent = "Makkah " + Math.round(mk.temperature_2m) + "° · " + (WX[mk.weather_code] || "");
+    }).catch(function () { document.getElementById("weather").textContent = ""; });
+  }
+
+  function tvWidget(el, name, cfg) {
+    var box = document.createElement("div"); box.className = "tradingview-widget-container";
+    var inner = document.createElement("div"); inner.className = "tradingview-widget-container__widget"; box.appendChild(inner);
+    var s = document.createElement("script"); s.async = true;
+    s.src = "https://s3.tradingview.com/external-embedding/embed-widget-" + name + ".js";
+    s.text = JSON.stringify(cfg); box.appendChild(s); el.appendChild(box);
+  }
+  var SYMBOLS = [
+    { proName: "FOREXCOM:SPXUSD", title: "S&P 500" }, { proName: "FOREXCOM:NSXUSD", title: "Nasdaq 100" },
+    { proName: "FOREXCOM:DJI", title: "Dow 30" }, { proName: "TADAWUL:TASI", title: "TASI" },
+    { proName: "TVC:UKOIL", title: "Brent" }, { proName: "OANDA:XAUUSD", title: "Gold" },
+    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" }, { proName: "TVC:US10Y", title: "US 10Y" },
+    { proName: "FX_IDC:USDCAD", title: "USD/CAD" }, { proName: "TVC:DXY", title: "Dollar Index" }
+  ];
+  tvWidget(document.getElementById("tape"), "ticker-tape", { symbols: SYMBOLS, colorTheme: "dark", isTransparent: true, displayMode: "adaptive", showSymbolLogo: true, locale: "en" });
+  tvWidget(document.getElementById("overview"), "market-overview", {
+    colorTheme: "dark", dateRange: "1D", showChart: true, locale: "en", width: "100%", height: "100%", isTransparent: true, showSymbolLogo: true,
+    plotLineColorGrowing: "#2fbf71", plotLineColorFalling: "#e5484d", gridLineColor: "rgba(255,255,255,0.04)", scaleFontColor: "#8b93a1",
+    belowLineFillColorGrowing: "rgba(47,191,113,0.12)", belowLineFillColorFalling: "rgba(229,72,77,0.12)",
+    tabs: [
+      { title: "US", symbols: [{ s: "FOREXCOM:SPXUSD", d: "S&P 500" }, { s: "FOREXCOM:NSXUSD", d: "Nasdaq 100" }, { s: "FOREXCOM:DJI", d: "Dow 30" }, { s: "NASDAQ:AAPL" }, { s: "NASDAQ:NVDA" }, { s: "NASDAQ:MSFT" }] },
+      { title: "Saudi & Canada", symbols: [{ s: "TADAWUL:TASI", d: "TASI" }, { s: "TADAWUL:2222", d: "Aramco" }, { s: "TADAWUL:1120", d: "Al Rajhi" }, { s: "TSX:RY", d: "Royal Bank" }, { s: "TSX:TD", d: "TD Bank" }, { s: "TSX:SHOP", d: "Shopify" }] },
+      { title: "Macro", symbols: [{ s: "TVC:US10Y", d: "US 10Y Yield" }, { s: "TVC:DXY", d: "Dollar Index" }, { s: "TVC:UKOIL", d: "Brent" }, { s: "OANDA:XAUUSD", d: "Gold" }, { s: "BITSTAMP:BTCUSD", d: "Bitcoin" }] }
+    ]
+  });
+  tvWidget(document.getElementById("news"), "timeline", { feedMode: "market", market: "stock", colorTheme: "dark", isTransparent: true, displayMode: "regular", width: "100%", height: "100%", locale: "en" });
+
+  // Background photos from Wikimedia Commons (free licences; credits shown bottom-right).
+  var WM = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
+  var PHOTOS = [
+    [WM + "9/95/Toronto_Skyline_at_night_2024-08-23.jpg/1920px-Toronto_Skyline_at_night_2024-08-23.jpg", "Toronto skyline at night · Wikimedia Commons, CC0"],
+    [WM + "4/4c/Toronto_-_ON_-_Skyline_bei_Nacht.jpg/1920px-Toronto_-_ON_-_Skyline_bei_Nacht.jpg", "Toronto bei Nacht · Wikimedia Commons, CC BY-SA 3.0"],
+    [WM + "0/06/New_York_Stock_Exchange%2C_Wall_Street_1.jpg/1920px-New_York_Stock_Exchange%2C_Wall_Street_1.jpg", "New York Stock Exchange, Wall Street · Wikimedia Commons, CC BY-SA 4.0"],
+    [WM + "3/3c/Sunset_Toronto_Skyline_Panorama_Crop_from_Snake_Island.jpg/1920px-Sunset_Toronto_Skyline_Panorama_Crop_from_Snake_Island.jpg", "Toronto sunset from Snake Island · Wikimedia Commons, CC BY-SA 4.0"],
+    [WM + "4/47/Bay_Street_Toronto_May_2012.jpg/1920px-Bay_Street_Toronto_May_2012.jpg", "Bay Street, Toronto · Wikimedia Commons, CC BY-SA 2.0"]
+  ];
+  var phIdx = 0, phFront = false;
+  function nextPhoto() {
+    var el = document.getElementById(phFront ? "ph-a" : "ph-b"), other = document.getElementById(phFront ? "ph-b" : "ph-a");
+    var p = PHOTOS[phIdx % PHOTOS.length]; phIdx++;
+    var img = new Image();
+    img.onload = function () {
+      el.style.backgroundImage = "url('" + p[0] + "')";
+      el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); other.classList.remove("on");
+      document.getElementById("credit").textContent = p[1];
+      phFront = !phFront;
+    };
+    img.src = p[0];
+  }
+  nextPhoto(); setInterval(nextPhoto, 40000);
+
+  tick(); setInterval(tick, 15000);
+  loadF1(); setInterval(loadF1, 3 * 3600e3);
+  loadWeather(); setInterval(loadWeather, 30 * 60e3);
+  // Reload hourly so the widgets never go stale on a screen left running all day.
+  setTimeout(function () { location.reload(); }, 3600e3);
+</script>
+</body>
+</html>
